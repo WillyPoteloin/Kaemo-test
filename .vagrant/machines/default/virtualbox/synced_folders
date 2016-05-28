@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/vagrant/kaemo-test":{"type":null,"mount_options":[],"guestpath":"/home/vagrant/kaemo-test","hostpath":"/Users/willy/Documents/VM/kaemo-test","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/willy/Documents/VM/kaemo-test","disabled":false,"__vagrantfile":true}}}

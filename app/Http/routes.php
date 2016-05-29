@@ -17,6 +17,6 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'api'], function () {
 
-  Route::resource('videos', 'VideosController');
+    Route::resource('videos', 'VideosController');
 
 });

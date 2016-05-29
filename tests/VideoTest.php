@@ -6,12 +6,34 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class VideoTest extends TestCase
 {
+    /**
+    * Setup before testing
+    *
+    * @return void
+    */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->setUpDatabase();
+    }
 
     /**
-     * Testing videos store method.
-     *
-     * @return void
-     */
+    * Setup database before testing
+    *
+    * @return void
+    */
+    protected function setUpDatabase()
+    {
+        Artisan::call('migrate:refresh');
+        $this->seed();
+    }
+
+    /**
+    * Testing videos store method.
+    *
+    * @return void
+    */
     public function testStoreVideo()
     {
         $response = $this->call('POST', '/api/videos', ['title' => 'The wire', 'realisator' => 'David Simon']);
@@ -31,10 +53,10 @@ class VideoTest extends TestCase
     }
 
     /**
-     * Testing videos index method.
-     *
-     * @return void
-     */
+    * Testing videos index method.
+    *
+    * @return void
+    */
     public function testIndexVideos()
     {
         $response = $this->call('GET', '/api/videos');
@@ -47,11 +69,11 @@ class VideoTest extends TestCase
     }
 
     /**
-     * Testing videos index method with parameters.
-     *
-     * @return void
-     */
-    public function testIndexVideosWithParameters()
+    * Testing videos index method with date parameters.
+    *
+    * @return void
+    */
+    public function testIndexVideosWithDateParameters()
     {
         $response = $this->call('GET', '/api/videos?from=20150101&to=20151231');
 
@@ -62,21 +84,43 @@ class VideoTest extends TestCase
         $this->assertArrayHasKey('videos', $data);
 
         if(is_array($data['videos'])) {
-          foreach ($data['videos'] as $key => $video) {
-            $this->assertGreaterThanOrEqual(strtotime('2015-01-01'), strtotime($video['date']));
-            $this->assertLessThanOrEqual(strtotime('2015-12-31'), strtotime($video['date']));
-          }
+            foreach ($data['videos'] as $key => $video) {
+                $this->assertGreaterThanOrEqual(strtotime('2015-01-01'), strtotime($video['date']));
+                $this->assertLessThanOrEqual(strtotime('2015-12-31'), strtotime($video['date']));
+            }
         }
     }
 
     /**
-     * Testing videos show method.
-     *
-     * @return void
-     */
+    * Testing videos index method with realisator parameters.
+    *
+    * @return void
+    */
+    public function testIndexVideosWithRealisatorParameters()
+    {
+        $response = $this->call('GET', '/api/videos?realisator=David');
+
+        $this->assertResponseStatus(200);
+        $data = json_decode($response->content(), true);
+
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('videos', $data);
+
+        if(is_array($data['videos'])) {
+            foreach ($data['videos'] as $key => $video) {
+                $this->assertRegExp('/david/i', $video['realisator']);
+            }
+        }
+    }
+
+    /**
+    * Testing videos show method.
+    *
+    * @return void
+    */
     public function testShowVideo()
     {
-        $response = $this->call('GET', '/api/videos/1');
+        $response = $this->call('GET', '/api/videos/15');
 
         $this->assertResponseStatus(200);
         $data = json_decode($response->content(), true);
@@ -88,17 +132,17 @@ class VideoTest extends TestCase
         $this->assertArrayHasKey('title', $video);
         $this->assertArrayHasKey('date', $video);
         $this->assertArrayHasKey('realisator', $video);
-        $this->assertEquals(1, $video['id']);
+        $this->assertEquals(15, $video['id']);
     }
 
     /**
-     * Testing video destroy method.
-     *
-     * @return void
-     */
+    * Testing video destroy method.
+    *
+    * @return void
+    */
     public function testDestroyVideo()
     {
-        $response = $this->call('DELETE', '/api/videos/1');
+        $response = $this->call('DELETE', '/api/videos/15');
 
         $this->assertResponseStatus(200);
         $data = json_decode($response->content(), true);

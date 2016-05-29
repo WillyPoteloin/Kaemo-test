@@ -6,10 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 class CreateVideosTable extends Migration
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    * Run the migrations.
+    *
+    * @return void
+    */
     public function up()
     {
         Schema::create('videos', function (Blueprint $table) {
@@ -21,10 +21,10 @@ class CreateVideosTable extends Migration
     }
 
     /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    * Reverse the migrations.
+    *
+    * @return void
+    */
     public function down()
     {
         Schema::drop('videos');

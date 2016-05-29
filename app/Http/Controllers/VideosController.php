@@ -43,13 +43,24 @@ class VideosController extends Controller
      */
     public function store(Request $request)
     {
-        $video = new Video;
+      // Default return value
+      $new_video = null;
 
-        $video->title = $request->input('title');
-        $video->date = date('YYYY-MM-DD H:i:s');
-        $video->realisator = $request->input('realisator');
+      // Checking request parameters
+      if($request->has('title') && $request->has('realisator') && !empty($request->title) && !empty($request->realisator)) {
 
-        $video->save();
+        // Defining video attributes
+        $video = array();
+
+        $video['title'] = $request->title;
+        $video['date'] = date('Y-m-d H:i:s');
+        $video['realisator'] = $request->realisator;
+
+        // Create new video
+        $new_video = Video::create($video);
+      }
+
+      return response()->json(['video' => $new_video]);
     }
 
     /**
@@ -84,6 +95,14 @@ class VideosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $return = false;
+        $video = Video::find($id);
+
+        if(!is_null($video)) {
+          $video->delete();
+          $return = true;
+        }
+
+        return response()->json($return);
     }
 }

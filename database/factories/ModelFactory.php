@@ -23,7 +23,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Video::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->city,
-        'date' => $faker->time,
+        'date' => $faker->dateTimeThisDecade,
         'realisator' => $faker->name,
     ];
 });
